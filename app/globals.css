@@ -1,0 +1,43 @@
+@import "tailwindcss";
+
+:root {
+  --ink: #18251f;
+  --muted: #68736c;
+  --cream: #f6f1e7;
+  --paper: #fffdf8;
+  --line: #e4ded2;
+  --sage: #315c49;
+  --sage-soft: #dce9df;
+  --coral: #d96c4f;
+  --gold: #dba84c;
+  --danger: #a63e32;
+}
+
+* { box-sizing: border-box; }
+html { background: var(--cream); }
+body {
+  margin: 0;
+  background:
+    radial-gradient(circle at 75% -10%, rgba(219,168,76,.18), transparent 28rem),
+    var(--cream);
+  color: var(--ink);
+  font-family: "Segoe UI", Inter, Arial, sans-serif;
+}
+button, input, select { font: inherit; }
+button { cursor: pointer; }
+button:focus-visible, input:focus-visible, select:focus-visible {
+  outline: 3px solid rgba(49,92,73,.28);
+  outline-offset: 2px;
+}
+.display { font-family: Georgia, "Times New Roman", serif; }
+.card { background: rgba(255,253,248,.92); border: 1px solid var(--line); border-radius: 20px; }
+.pill { border-radius: 999px; padding: .4rem .72rem; font-size: .75rem; font-weight: 700; }
+.shadow-soft { box-shadow: 0 18px 55px rgba(39,48,42,.08); }
+.dot-grid {
+  background-image: radial-gradient(rgba(49,92,73,.13) 1px, transparent 1px);
+  background-size: 18px 18px;
+}
+@media print {
+  nav, .no-print { display: none !important; }
+  body { background: white; }
+}
