@@ -1,0 +1,1 @@
+export function GET() { return Response.json({ revenueCents: 482000, covers: 86, prepMinutes: 16, tableTurnMinutes: 72, insights: ["Hearth station will peak at 7:45pm", "Miso glaze is the most disruptive ingredient", "Kitchen acknowledgements are at 100%"] }); }

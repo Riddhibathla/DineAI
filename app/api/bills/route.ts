@@ -1,0 +1,1 @@
+export function GET() { return Response.json({ data: [{ receipt: "LU-1046", table: "T11", totalCents: 3951, status: "UNPAID" }, { receipt: "LU-1045", table: "T05", totalCents: 2706, status: "PAID" }] }); }

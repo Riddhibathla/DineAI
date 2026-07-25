@@ -4,6 +4,22 @@ Restaurant Pulse is a real-time restaurant operating system connecting guests, t
 
 > SafePlate supports communication and operational decisions. It cannot guarantee the absence of allergens or cross-contact.
 
+## Workspace routes and API surface
+
+The application is organized as separate workspaces rather than a single dashboard:
+
+- `/guest` - menu, dietary preferences, cart and ordering
+- `/queue` - queue estimates and seating sequence
+- `/service` - table floor and service actions
+- `/kitchen` - kitchen tickets and status actions
+- `/inventory` - ingredient availability and impact
+- `/safety` - SafePlate handoff relay
+- `/analytics` - operational signals
+- `/billing` - bills and receipts
+- `/table/{publicTableToken}` - QR-compatible table session
+
+Demo API endpoints mirror those workspaces: `/api/menu`, `/api/queue`, `/api/orders`, `/api/inventory`, `/api/safety`, `/api/analytics`, and `/api/bills`.
+
 ## Hackathon coverage
 
 - **Bronze:** premium responsive customer and staff interfaces
