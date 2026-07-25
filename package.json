@@ -9,7 +9,7 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "eslint . --ignore-pattern .next",
+    "lint": "eslint . --ignore-pattern .next --ignore-pattern .next-stale-preview --ignore-pattern .next-stale-preview/** --ignore-pattern .next-stale-preview-2 --ignore-pattern .next-stale-preview-2/**",
     "typecheck": "tsc --noEmit",
     "test": "vitest run",
     "test:watch": "vitest",
