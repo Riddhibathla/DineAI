@@ -1,116 +1,77 @@
-# Restaurant Pulse
+# DineAI - Restaurant Pulse
 
-Restaurant Pulse is a real-time restaurant operating system connecting guests, tables, service, kitchen, inventory, billing and operational analytics. Its differentiator, **SafePlate Relay**, preserves dietary context through every handoff and fails safely when ingredient information is incomplete.
+## Product Vision
+DineAI is a real-time restaurant operating system connecting customers, tables, servers, kitchen staff, and management. It bridges the gap between front-of-house operations, back-of-house fulfillment, and inventory, solving problems like long wait times, delayed communication, manual tracking, and safety compliance.
 
-> SafePlate supports communication and operational decisions. It cannot guarantee the absence of allergens or cross-contact.
+## Unique Innovation - SafePlate Relay
+The signature feature is "SafePlate Relay": a closed-loop dietary-constraint communication workflow. It ensures that when a guest selects a dietary constraint (e.g., Peanut allergy), it travels immutably through the entire lifecycle of the order. The system enforces acknowledgments from the Server, Kitchen, Prep station, and Delivery runner to guarantee maximum communication safety. 
 
-## Workspace routes and API surface
-
-The application is organized as separate workspaces rather than a single dashboard:
-
-- `/guest` - menu, dietary preferences, cart and ordering
-- `/queue` - queue estimates and seating sequence
-- `/service` - table floor and service actions
-- `/kitchen` - kitchen tickets and status actions
-- `/inventory` - ingredient availability and impact
-- `/safety` - SafePlate handoff relay
-- `/analytics` - operational signals
-- `/billing` - bills and receipts
-- `/table/{publicTableToken}` - QR-compatible table session
-
-Demo API endpoints mirror those workspaces: `/api/menu`, `/api/queue`, `/api/orders`, `/api/inventory`, `/api/safety`, `/api/analytics`, and `/api/bills`.
-
-## Hackathon coverage
-
-- **Bronze:** premium responsive customer and staff interfaces
-- **Silver:** Auth.js credentials/Google integration, digital menu, live availability, queue, orders and notifications
-- **Gold:** role-specific kitchen/service/manager workspaces, inventory, billing and analytics
-- **Platinum:** explainable constraint classification, ingredient impact propagation, estimates and recommendations
+> **DISCLAIMER:** SafePlate supports communication and operational decisions but cannot guarantee the absence of allergens or cross-contact.
 
 ## Architecture
+- **Frontend**: Next.js 16 (App Router), React 19, Tailwind CSS, shadcn/ui patterns.
+- **Backend**: Next.js Server Components and Server Actions.
+- **Database**: MongoDB with Mongoose (Local for dev, Atlas for prod).
+- **Authentication**: Auth.js (NextAuth v5) using Credentials and Google OAuth.
+- **Testing**: Playwright for E2E, Vitest for unit tests.
 
-```mermaid
-flowchart LR
-  Guest --> Menu
-  Inventory --> Menu
-  Menu --> Order
-  Queue --> Table
-  Table --> Order
-  Order --> Kitchen
-  Kitchen --> Service
-  Service --> Bill
-  SafePlate --> Menu
-  SafePlate --> Order
-  SafePlate --> Kitchen
-  Order --> Events
-  Inventory --> Events
-  Events --> Dashboard
-```
+## Technology Stack
+- Next.js (App Router)
+- React & Tailwind CSS
+- MongoDB & Mongoose
+- NextAuth.js
+- Zod, React Hook Form
+- Recharts (Analytics)
+- Playwright, Vitest
 
-The Next.js App Router application uses server components by default and a focused client operations shell for the live demo. Mongoose models live in `lib/models.ts`; business rules such as dietary classification, billing, estimates and order transitions live in `lib/domain.ts`. Auth.js provides JWT sessions with credentials and optional Google OAuth.
+## Data Model Overview
+- **User**: Staff and Customer accounts.
+- **Restaurant**: Main multi-tenant scope.
+- **QueueEntry**: Waitlist management.
+- **Table**: Seating assignments and QR tokens.
+- **MenuItem/MenuCategory**: Digital menu structure.
+- **Ingredient**: Granular inventory with allergens.
+- **Order**: Immutable snapshot of the guest request.
+- **SafetyCheck**: Audit log of SafePlate acknowledgments.
 
-## Local setup
+## Installation & Setup
 
-Requirements: Node.js 22+, npm, and MongoDB 7+.
+1. **Install dependencies:**
+   ```bash
+   npm install
+   ```
 
-```bash
-npm install
-copy .env.example .env.local
-npm run dev
-```
+2. **Configure Environment:**
+   Copy `.env.example` to `.env.local` and add your configurations.
+   For local development:
+   ```
+   MONGODB_URI="mongodb://127.0.0.1:27017/dine-ai"
+   AUTH_SECRET="your-secret"
+   ```
 
-Set `MONGODB_URI=mongodb://127.0.0.1:27017/restaurant-pulse` for a local database. Generate a strong secret with `openssl rand -base64 32` and set it as `AUTH_SECRET`.
+3. **Seed Database:**
+   ```bash
+   $env:MONGODB_URI="mongodb://127.0.0.1:27017/dine-ai"
+   npm run seed
+   ```
 
-## Commands
+4. **Run Dev Server:**
+   ```bash
+   npm run dev
+   ```
 
-```bash
-npm run dev
-npm run typecheck
-npm run lint
-npm test
-npm run build
-npm run start
-```
+## Demo Accounts
+Password for all: `PulseDemo!2026`
+- **Customer**: `customer@restaurantpulse.demo`
+- **Server**: `server@restaurantpulse.demo`
+- **Kitchen**: `kitchen@restaurantpulse.demo`
+- **Manager**: `manager@restaurantpulse.demo`
 
-## OAuth and email
+## Test Commands
+- Unit Tests: `npm run test`
+- E2E Tests: `npm run test:e2e`
+- Typecheck: `npm run typecheck`
+- Lint: `npm run lint`
 
-Create a Google OAuth web application and allow:
-
-- `http://localhost:3000/api/auth/callback/google`
-- `https://YOUR_DOMAIN/api/auth/callback/google`
-
-Set `AUTH_GOOGLE_ID` and `AUTH_GOOGLE_SECRET`. Configure the SMTP variables for verification and password-reset delivery. Google login is omitted safely when its credentials are absent.
-
-## Production deployment
-
-1. Create a MongoDB Atlas database and restricted application user.
-2. Add all `.env.example` values to the deployment environment.
-3. Set `AUTH_URL` and `NEXT_PUBLIC_APP_URL` to the public HTTPS origin.
-4. Configure the production Google callback.
-5. Run `npm run build`.
-6. Deploy to Vercel or another Node.js-compatible Next.js host.
-7. Verify registration, role boundaries, queue, order, inventory and bill flows in an incognito browser.
-
-## Demo
-
-Use the role switcher in the header to present the seeded interactive demo:
-
-1. **Guest:** select Soy, inspect explainable compatibility, join the queue and place an order.
-2. **Kitchen:** acknowledge the order and expose its safety handoff.
-3. **Manager:** show the sauce substitution alert and low stock.
-4. **Service:** resolve the task, serve a ready order and close the loop.
-
-## Security and limitations
-
-The repository includes strict schemas, server-calculated money, idempotency keys, indexed restaurant scoping and deterministic SafePlate rules. External OAuth, SMTP, a running MongoDB instance and production deployment credentials must be configured by the operator. Payment collection is intentionally simulated; staff records a payment after collecting it through the restaurant's existing process.
-
-## Submission checklist
-
-- [ ] Team name added
-- [ ] Public repository URL added
-- [ ] Live application URL added
-- [ ] MongoDB Atlas and OAuth configured
-- [ ] Production demo data loaded
-- [ ] Mobile and incognito smoke test completed
-- [ ] Required presentation exported to PDF
-- [ ] AI usage and safety limitations disclosed
+## Deployment (Vercel)
+Set the environment variables in Vercel. Ensure `MONGODB_URI` points to a MongoDB Atlas cluster.

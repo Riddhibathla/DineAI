@@ -14,6 +14,10 @@ export const menu = [
   { id: "miso-salmon", name: "Miso glazed salmon", description: "Forbidden rice, greens, yuzu", priceCents: 2650, prepMinutes: 18, tags: ["Soy", "Fish"], availability: "REVIEW", image: "tide" },
   { id: "mushroom-pasta", name: "Wild mushroom pasta", description: "Brown butter, thyme, parmesan", priceCents: 2200, prepMinutes: 16, tags: ["Vegetarian", "Gluten"], availability: "MODIFIABLE", image: "gold" },
   { id: "citrus-garden", name: "Citrus garden", description: "Fennel, orange, toasted seeds", priceCents: 1250, prepMinutes: 8, tags: ["Vegan", "Gluten-free"], availability: "AVAILABLE", image: "grove" },
+  { id: "hearth-chicken", name: "Hearth chicken", description: "Smoked jus, roasted roots, crispy sage", priceCents: 2450, prepMinutes: 17, tags: ["Dairy-free", "Gluten-free"], availability: "AVAILABLE", image: "ember" },
+  { id: "tamarind-prawn", name: "Tamarind prawns", description: "Charred lime, jasmine rice, herbs", priceCents: 2350, prepMinutes: 14, tags: ["Shellfish", "Gluten-free"], availability: "AVAILABLE", image: "tide" },
+  { id: "summer-risotto", name: "Summer risotto", description: "Peas, lemon, aged parmesan", priceCents: 1950, prepMinutes: 15, tags: ["Vegetarian", "Dairy"], availability: "MODIFIABLE", image: "gold" },
+  { id: "spiced-tofu", name: "Spiced tofu bowl", description: "Sesame greens, pickled carrot, brown rice", priceCents: 1650, prepMinutes: 10, tags: ["Vegan", "Soy", "Sesame"], availability: "REVIEW", image: "grove" },
 ];
 
 export const inventory = [

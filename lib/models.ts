@@ -1,4 +1,4 @@
-import { Schema, model, models } from "mongoose";
+import mongoose, { Schema, model } from "mongoose";
 
 const options = { timestamps: true, strict: "throw" as const };
 const scoped = { restaurantId: { type: Schema.Types.ObjectId, ref: "Restaurant", required: true, index: true } };
@@ -106,17 +106,17 @@ const genericSchemas = {
   OperationalEvent: new Schema({ ...scoped, type: { type: String, index: true }, entityType: String, entityId: Schema.Types.ObjectId, payload: Schema.Types.Mixed, occurredAt: { type: Date, default: Date.now, index: true } }, options),
 };
 
-export const User = models.User || model("User", UserSchema);
-export const Restaurant = models.Restaurant || model("Restaurant", RestaurantSchema);
-export const RestaurantTable = models.RestaurantTable || model("RestaurantTable", TableSchema);
-export const QueueEntry = models.QueueEntry || model("QueueEntry", QueueEntrySchema);
-export const Ingredient = models.Ingredient || model("Ingredient", IngredientSchema);
-export const MenuCategory = models.MenuCategory || model("MenuCategory", MenuCategorySchema);
-export const MenuItem = models.MenuItem || model("MenuItem", MenuItemSchema);
-export const Order = models.Order || model("Order", OrderSchema);
-export const InventoryTransaction = models.InventoryTransaction || model("InventoryTransaction", genericSchemas.InventoryTransaction);
-export const Bill = models.Bill || model("Bill", genericSchemas.Bill);
-export const ServiceRequest = models.ServiceRequest || model("ServiceRequest", genericSchemas.ServiceRequest);
-export const Notification = models.Notification || model("Notification", genericSchemas.Notification);
-export const SafetyCheck = models.SafetyCheck || model("SafetyCheck", genericSchemas.SafetyCheck);
-export const OperationalEvent = models.OperationalEvent || model("OperationalEvent", genericSchemas.OperationalEvent);
+export const User = mongoose.models.User || model("User", UserSchema);
+export const Restaurant = mongoose.models.Restaurant || model("Restaurant", RestaurantSchema);
+export const RestaurantTable = mongoose.models.RestaurantTable || model("RestaurantTable", TableSchema);
+export const QueueEntry = mongoose.models.QueueEntry || model("QueueEntry", QueueEntrySchema);
+export const Ingredient = mongoose.models.Ingredient || model("Ingredient", IngredientSchema);
+export const MenuCategory = mongoose.models.MenuCategory || model("MenuCategory", MenuCategorySchema);
+export const MenuItem = mongoose.models.MenuItem || model("MenuItem", MenuItemSchema);
+export const Order = mongoose.models.Order || model("Order", OrderSchema);
+export const InventoryTransaction = mongoose.models.InventoryTransaction || model("InventoryTransaction", genericSchemas.InventoryTransaction);
+export const Bill = mongoose.models.Bill || model("Bill", genericSchemas.Bill);
+export const ServiceRequest = mongoose.models.ServiceRequest || model("ServiceRequest", genericSchemas.ServiceRequest);
+export const Notification = mongoose.models.Notification || model("Notification", genericSchemas.Notification);
+export const SafetyCheck = mongoose.models.SafetyCheck || model("SafetyCheck", genericSchemas.SafetyCheck);
+export const OperationalEvent = mongoose.models.OperationalEvent || model("OperationalEvent", genericSchemas.OperationalEvent);

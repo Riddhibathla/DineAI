@@ -1,3 +1,9 @@
+import fs from "fs";
+const envLocal = fs.readFileSync(".env.local", "utf8");
+envLocal.split("\n").forEach(line => {
+  const [key, ...values] = line.split("=");
+  if (key && values.length > 0) process.env[key.trim()] = values.join("=").trim().replace(/^['"]|['"]$/g, '');
+});
 import bcrypt from "bcryptjs";
 import crypto from "node:crypto";
 import { connectDB } from "../lib/db";
@@ -77,16 +83,16 @@ async function seed() {
   }
 
   const menu = [
-    ["Fire-roasted aubergine", "Small plates", 1450, 12, "Aubergine", 1],
-    ["Miso glazed salmon", "From the hearth", 2650, 18, "Salmon", 1],
-    ["Wild mushroom pappardelle", "House pasta", 2200, 16, "Pappardelle", 180],
-    ["Citrus garden salad", "Small plates", 1250, 8, "Garden greens", 140],
-    ["Heritage chicken", "From the hearth", 2800, 22, "Heritage chicken", 1],
+    ["Butter Chicken", "From the hearth", 1850, 20, "Heritage chicken", 1, "https://images.unsplash.com/photo-1603894584373-59f69622edd0?w=500&q=80"],
+    ["Paneer Tikka Masala", "From the hearth", 1650, 15, "Aubergine", 1, "https://images.unsplash.com/photo-1631515243349-e0cb75fb8d3a?w=500&q=80"],
+    ["Garlic Naan", "Small plates", 450, 5, "Pappardelle", 1, "https://images.unsplash.com/photo-1565557623262-b51c2513a641?w=500&q=80"],
+    ["Vegetable Biryani", "House pasta", 1450, 18, "Wild mushrooms", 1, "https://images.unsplash.com/photo-1563379926898-05f4575a45d8?w=500&q=80"],
+    ["Samosa Chaat", "Small plates", 850, 10, "Garden greens", 1, "https://images.unsplash.com/photo-1601050690597-df0568f70950?w=500&q=80"],
   ] as const;
-  for (const [name, category, priceCents, basePrepMinutes, ingredient, quantity] of menu) {
+  for (const [name, category, priceCents, basePrepMinutes, ingredient, quantity, imageUrl] of menu) {
     await MenuItem.findOneAndUpdate(
       { restaurantId: restaurant._id, name },
-      { $set: { categoryId: categories.get(category)!._id, description: "Seasonal ingredients prepared to order.", priceCents, basePrepMinutes, manualAvailability: "AUTO", featured: true, recipe: [{ ingredientId: ingredients.get(ingredient)!._id, quantity, removable: false }], archivedAt: null } },
+      { $set: { categoryId: categories.get(category)!._id, description: "Authentic Indian flavors prepared to order.", priceCents, basePrepMinutes, manualAvailability: "AUTO", featured: true, imageUrl, recipe: [{ ingredientId: ingredients.get(ingredient)!._id, quantity, removable: false }], archivedAt: null } },
       { upsert: true },
     );
   }

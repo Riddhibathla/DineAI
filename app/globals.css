@@ -1,4 +1,4 @@
-@import "tailwindcss";
+﻿@import "tailwindcss";
 
 :root { --ink:#141522; --muted:#696d7e; --paper:#fffdf9; --line:#e8e5df; --mist:#f3f0ea; --plum:#341d42; --orchid:#b744e5; --citrus:#d8fa49; --coral:#ff6f61; --mint:#72e1be; }
 * { box-sizing:border-box; } html,body { min-height:100%; } body { margin:0; color:var(--ink); background:var(--mist); font-family:Arial,"Helvetica Neue",sans-serif; } button { font:inherit; cursor:pointer; } button:focus-visible,a:focus-visible { outline:3px solid var(--citrus); outline-offset:3px; } a { color:inherit; text-decoration:none; }

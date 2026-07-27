@@ -1,4 +1,5 @@
 import NextAuth from "next-auth";
+import { authConfig } from "./auth.config";
 import Credentials from "next-auth/providers/credentials";
 import Google from "next-auth/providers/google";
 import bcrypt from "bcryptjs";
@@ -28,20 +29,6 @@ if (process.env.AUTH_GOOGLE_ID && process.env.AUTH_GOOGLE_SECRET) {
 }
 
 export const { handlers, auth, signIn, signOut } = NextAuth({
+  ...authConfig,
   providers,
-  session: { strategy: "jwt" },
-  pages: { signIn: "/" },
-  callbacks: {
-    jwt({ token, user }) {
-      if (user) token.role = (user as typeof user & { role?: string }).role ?? "CUSTOMER";
-      return token;
-    },
-    session({ session, token }) {
-      if (session.user) {
-        session.user.id = token.sub!;
-        (session.user as typeof session.user & { role?: string }).role = token.role as string;
-      }
-      return session;
-    },
-  },
 });
