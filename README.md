@@ -1,57 +1,68 @@
-# DINE AI
+```markdown
+# ✨✨✨ DineAI
 
-DINE AI is a restaurant operations demo with a clean split between the UI and API layers.
+> **The AI-Powered Restaurant Operating System**  
+> _Smarter Operations • Safer Dining • Inclusive Experiences_
 
-## Folder Structure
+🌐 **Live Demo:** https://dineai-uqol.onrender.com
 
-```text
-Dine-AI/
-├── backend/
-│   ├── app.js
-│   ├── controllers/
-│   │   ├── dashboard.controller.js
-│   │   └── menu.controller.js
-│   ├── data/
-│   │   └── demo-data.js
-│   └── routes/
-│       ├── dashboard.routes.js
-│       ├── menu.routes.js
-│       └── operations.routes.js
-├── frontend/
-│   ├── app/
-│   ├── components/
-│   ├── lib/
-│   ├── public/
-│   ├── next.config.ts
-│   ├── package.json
-│   └── tsconfig.json
-├── package.json
-└── start-dev-3001.cmd
-```
+---
 
-## Run
+## 🚀 About
 
-Start the frontend on `http://localhost:3001`:
+DineAI is an AI-powered platform that simplifies restaurant operations through **smart ordering, kitchen management, inventory tracking, analytics, billing, and real-time insights**. It also introduces **SafePlate Relay** for allergy-safe dining and **accessibility support** for a more inclusive customer experience.
 
-```bash
-npm run dev
-```
+---
 
-Start the backend API on `http://localhost:4000`:
+## ✨ Features
 
-```bash
-npm run backend
-```
+- 🤖 AI-Powered Insights
+- 🍽️ Smart Ordering & Live Menu
+- 🪑 Table & Queue Management
+- 👨‍🍳 Kitchen Dashboard
+- 📦 Inventory Management
+- 💳 Billing & Analytics
+- 🥜 SafePlate Relay (Allergy Safety)
+- ♿ Accessibility Support
 
-## API Routes
+---
 
-- `GET /api/dashboard`
-- `GET /api/menu`
-- `GET /api/operations`
+## 🛠️ Tech Stack
 
-## Checks
+**Next.js • React • TypeScript • Tailwind CSS • Node.js • Express.js • MongoDB • JWT • Google OAuth • Gemini AI • Render**
 
-```bash
-npm run typecheck
-npm run lint
+---
+
+## ✅ User Stories Completed
+
+✔ Authentication & Role-Based Access  
+✔ Digital Ordering & Reservations  
+✔ Kitchen & Inventory Management  
+✔ Billing & Analytics Dashboard  
+✔ Allergy & Accessibility Support  
+✔ AI Insights & Recommendations
+
+---
+
+## 🌟 Why DineAI?
+
+An **AI-first Restaurant Operating System** that combines intelligent automation, allergy-aware dining, accessibility, and operational intelligence—all in one platform.
+
+---
+
+## 👥 Team
+
+**Byte Crunchers**
+
+---
+
+## 🤖 AI Usage
+
+Approximately **10% AI assistance** was used for code suggestions, debugging, documentation, and UI refinement. All core architecture, business logic, and implementation were developed by **Team Byte Crunchers**.
+
+---
+
+### 🚀 Live Application
+
+**https://dineai-uqol.onrender.com**
 ```
