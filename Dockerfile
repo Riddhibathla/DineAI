@@ -1,17 +1,17 @@
-FROM node:22
+FROM node:22-alpine
 
 WORKDIR /app
 
-# Copy everything
-COPY . .
+COPY frontend/package*.json ./frontend/
 
-# Install frontend dependencies
 WORKDIR /app/frontend
 RUN npm install
+
+COPY frontend/ .
+
 RUN npm run build
 
-EXPOSE 10000
-
 ENV PORT=10000
+EXPOSE 10000
 
 CMD ["npm", "run", "start"]
