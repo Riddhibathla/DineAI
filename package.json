@@ -4,9 +4,8 @@
   "private": true,
   "scripts": {
     "dev": "npm --prefix frontend run dev -- -p 3001 --hostname 127.0.0.1",
-    "frontend": "npm --prefix frontend run dev -- -p 3001 --hostname 127.0.0.1",
-    "backend": "node backend/app.js",
-    "typecheck": "npm --prefix frontend run typecheck",
-    "lint": "npm --prefix frontend run lint"
+    "build": "npm --prefix frontend install && npm --prefix frontend run build",
+    "start": "npm --prefix frontend run start",
+    "backend": "node backend/app.js"
   }
 }
