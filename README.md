@@ -1,5 +1,4 @@
-```markdown
-# ✨✨✨ DineAI
+✨ DineAI
 
 > **The AI-Powered Restaurant Operating System**  
 > _Smarter Operations • Safer Dining • Inclusive Experiences_
