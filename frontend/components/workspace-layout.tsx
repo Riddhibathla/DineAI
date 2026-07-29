@@ -28,6 +28,7 @@ const meta: Record<Page, { lens: string; title: string; description: string }> =
 
 export function WorkspaceLayout({ page, children }: { page: Page; children: React.ReactNode }) {
   const [drawer, setDrawer] = useState(false);
+  const isGuestView = page === "guest" || page === "table";
   
   return (
     <div className="constellation">
@@ -35,21 +36,27 @@ export function WorkspaceLayout({ page, children }: { page: Page; children: Reac
         <Link href="/" className="pulse-logo">
           <span>D</span><b>DINE<br />AI</b>
         </Link>
-        <nav className={drawer ? "nav-open" : ""}>
-          {links.map(({ href, label, icon: Icon }) => (
-            <Link key={href} href={href} className={page === href.slice(1) || (page === "table" && href === "/guest") ? "current" : ""}>
-              <Icon size={16} />{label}
-            </Link>
-          ))}
-        </nav>
+        {!isGuestView && (
+          <nav className={drawer ? "nav-open" : ""}>
+            {links.map(({ href, label, icon: Icon }) => (
+              <Link key={href} href={href} className={page === href.slice(1) ? "current" : ""}>
+                <Icon size={16} />{label}
+              </Link>
+            ))}
+          </nav>
+        )}
         <div className="top-tools">
           <Link className="account-link" href="/account" aria-label="Your account"><LogIn size={17} /></Link>
-          <button onClick={() => toast.info("3 operational updates") } aria-label="Notifications">
-            <Bell size={18} /><i>3</i>
-          </button>
-          <button className="nav-toggle" onClick={() => setDrawer(!drawer)} aria-label="Toggle navigation">
-            {drawer ? <X size={19} /> : <Menu size={19} />}
-          </button>
+          {!isGuestView && (
+            <>
+              <button onClick={() => toast.info("3 operational updates") } aria-label="Notifications">
+                <Bell size={18} /><i>3</i>
+              </button>
+              <button className="nav-toggle" onClick={() => setDrawer(!drawer)} aria-label="Toggle navigation">
+                {drawer ? <X size={19} /> : <Menu size={19} />}
+              </button>
+            </>
+          )}
         </div>
       </header>
       <main className="constellation-main">

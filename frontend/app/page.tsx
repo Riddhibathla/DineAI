@@ -36,7 +36,7 @@ export default function Home() {
           inventory and SafePlate dietary handoffs.
         </span>
         <div className="portal-actions">
-          <Link className="launch" href="/auth?next=%2Fguest">
+          <Link className="launch" href="/guest">
             Explore as a guest <ArrowUpRight size={18} />
           </Link>
           <Link className="portal-signin" href="/auth">
