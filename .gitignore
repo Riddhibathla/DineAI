@@ -22,6 +22,7 @@
 /.next-stale-preview-3/
 /.vinext/
 /out/
+/frontend/.open-next/
 
 # misc
 .DS_Store

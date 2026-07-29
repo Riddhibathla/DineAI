@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { useState } from "react";
 import { toast } from "sonner";
-import { ArrowLeft, Bell, ChefHat, CreditCard, Leaf, Menu, ScanLine, ShieldCheck, Sparkles, Table2, UsersRound, X } from "lucide-react";
+import { ArrowLeft, Bell, ChefHat, CreditCard, Leaf, LogIn, Menu, ScanLine, ShieldCheck, Sparkles, Table2, UsersRound, X } from "lucide-react";
 
 type Page = "guest" | "queue" | "service" | "kitchen" | "inventory" | "safety" | "analytics" | "billing" | "table";
 
@@ -43,6 +43,7 @@ export function WorkspaceLayout({ page, children }: { page: Page; children: Reac
           ))}
         </nav>
         <div className="top-tools">
+          <Link className="account-link" href="/account" aria-label="Your account"><LogIn size={17} /></Link>
           <button onClick={() => toast.info("3 operational updates") } aria-label="Notifications">
             <Bell size={18} /><i>3</i>
           </button>

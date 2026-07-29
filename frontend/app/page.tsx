@@ -9,6 +9,7 @@ import {
   Sparkles,
   Table2,
   UsersRound,
+  UserRound,
 } from "lucide-react";
 
 export default function Home() {
@@ -34,9 +35,14 @@ export default function Home() {
           A live restaurant operating system for guests, service, kitchen,
           inventory and SafePlate dietary handoffs.
         </span>
-        <Link className="launch" href="/guest">
-          Open guest menu <ArrowUpRight size={18} />
-        </Link>
+        <div className="portal-actions">
+          <Link className="launch" href="/guest">
+            Explore as a guest <ArrowUpRight size={18} />
+          </Link>
+          <Link className="portal-signin" href="/auth">
+            <UserRound size={17} /> Sign in
+          </Link>
+        </div>
         <i className="orbit orbit-one" />
         <i className="orbit orbit-two" />
       </section>

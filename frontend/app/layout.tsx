@@ -7,6 +7,7 @@ export const metadata: Metadata = {
   title: "DINE AI - every service beat, in sync",
   description:
     "A live restaurant operating system for guests, service, kitchen, inventory and SafePlate dietary handoffs.",
+  robots: { index: true, follow: true },
 };
 
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
