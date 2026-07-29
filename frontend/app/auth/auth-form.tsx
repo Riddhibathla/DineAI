@@ -18,6 +18,11 @@ export function AuthForm() {
   const [message, setMessage] = useState(searchParams.get("error") ?? "");
   const [success, setSuccess] = useState(false);
   const configured = isAuthConfigured();
+  const requestedNext = searchParams.get("next");
+  const next =
+    requestedNext?.startsWith("/") && !requestedNext.startsWith("//")
+      ? requestedNext
+      : "/account";
 
   useEffect(() => {
     if (!configured) setMessage("Connect Supabase to activate secure sign in.");
@@ -36,7 +41,7 @@ export function AuthForm() {
         email,
         password,
         options: {
-          emailRedirectTo: `${window.location.origin}/auth/callback?next=/guest`,
+          emailRedirectTo: `${window.location.origin}/auth/callback?next=${encodeURIComponent(next)}`,
           data: { account_type: "customer" },
         },
       });
@@ -50,7 +55,7 @@ export function AuthForm() {
     const { error } = await supabase.auth.signInWithPassword({ email, password });
     setBusy(false);
     if (error) return setMessage(error.message);
-    router.push("/account");
+    router.push(next);
     router.refresh();
   }
 
@@ -62,7 +67,7 @@ export function AuthForm() {
     const { error } = await supabase.auth.signInWithOAuth({
       provider: "google",
       options: {
-        redirectTo: `${window.location.origin}/auth/callback?next=/guest`,
+        redirectTo: `${window.location.origin}/auth/callback?next=${encodeURIComponent(next)}`,
       },
     });
     if (error) {
