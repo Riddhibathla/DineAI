@@ -12,6 +12,7 @@ import {
   CircleAlert,
   CreditCard,
   Leaf,
+  LogIn,
   Menu,
   Plus,
   ScanLine,
@@ -191,38 +192,43 @@ export function Workspace({ page }: { page: Page }) {
             AI
           </b>
         </Link>
-        <nav className={drawer ? "nav-open" : ""}>
-          {links.map(({ href, label, icon: Icon }) => (
-            <Link
-              key={href}
-              href={href}
-              className={
-                page === href.slice(1) ||
-                (page === "table" && href === "/guest")
-                  ? "current"
-                  : ""
-              }
-            >
-              <Icon size={16} />
-              {label}
-            </Link>
-          ))}
-        </nav>
+        {page !== "guest" && page !== "table" && (
+          <nav className={drawer ? "nav-open" : ""}>
+            {links.map(({ href, label, icon: Icon }) => (
+              <Link
+                key={href}
+                href={href}
+                className={page === href.slice(1) ? "current" : ""}
+              >
+                <Icon size={16} />
+                {label}
+              </Link>
+            ))}
+          </nav>
+        )}
         <div className="top-tools">
-          <button
-            onClick={() => toast.info("3 operational updates")}
-            aria-label="Notifications"
-          >
-            <Bell size={18} />
-            <i>3</i>
-          </button>
-          <button
-            className="nav-toggle"
-            onClick={() => setDrawer(!drawer)}
-            aria-label="Toggle navigation"
-          >
-            {drawer ? <X size={19} /> : <Menu size={19} />}
-          </button>
+          {(page === "guest" || page === "table") ? (
+            <Link className="account-link" href="/auth" aria-label="Sign in">
+              <LogIn size={17} />
+            </Link>
+          ) : (
+            <>
+              <button
+                onClick={() => toast.info("3 operational updates")}
+                aria-label="Notifications"
+              >
+                <Bell size={18} />
+                <i>3</i>
+              </button>
+              <button
+                className="nav-toggle"
+                onClick={() => setDrawer(!drawer)}
+                aria-label="Toggle navigation"
+              >
+                {drawer ? <X size={19} /> : <Menu size={19} />}
+              </button>
+            </>
+          )}
         </div>
       </header>
       <main className="constellation-main">
