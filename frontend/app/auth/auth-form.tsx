@@ -18,6 +18,9 @@ export function AuthForm() {
   const [message, setMessage] = useState(searchParams.get("error") ?? "");
   const [success, setSuccess] = useState(false);
   const configured = isAuthConfigured();
+  const siteUrl =
+    process.env.NEXT_PUBLIC_SITE_URL?.replace(/\/$/, "") ||
+    (typeof window !== "undefined" ? window.location.origin : "");
   const requestedNext = searchParams.get("next");
   const next =
     requestedNext?.startsWith("/") && !requestedNext.startsWith("//")
@@ -41,7 +44,7 @@ export function AuthForm() {
         email,
         password,
         options: {
-          emailRedirectTo: `${window.location.origin}/auth/callback?next=${encodeURIComponent(next)}`,
+          emailRedirectTo: `${siteUrl}/auth/callback?next=${encodeURIComponent(next)}`,
           data: { account_type: "customer" },
         },
       });
@@ -67,7 +70,7 @@ export function AuthForm() {
     const { error } = await supabase.auth.signInWithOAuth({
       provider: "google",
       options: {
-        redirectTo: `${window.location.origin}/auth/callback?next=${encodeURIComponent(next)}`,
+        redirectTo: `${siteUrl}/auth/callback?next=${encodeURIComponent(next)}`,
       },
     });
     if (error) {
