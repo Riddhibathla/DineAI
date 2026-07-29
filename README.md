@@ -10,7 +10,12 @@
 ## 🚀 About
 
 DineAI is an AI-powered platform that simplifies restaurant operations through **smart ordering, kitchen management, inventory tracking, analytics, billing, and real-time insights**. It also introduces **SafePlate Relay** for allergy-safe dining and **accessibility support** for a more inclusive customer experience.
+---
 
+## 🚀 Login Credentials
+
+Manager Login: Riddhibathla95@gmail.com
+password: Admin@123
 ---
 
 ## ✨ Features
