@@ -52,9 +52,9 @@ export default function Home() {
       </nav>
 
       <section className="portal-hero" aria-labelledby="portal-title">
-        <div className="portal-hero-copy reveal">
+        <div className="portal-hero-copy reveal-lux">
           <p className="portal-eyebrow">RESTURANT SERVICE, CONNECTED</p>
-          <h1 id="portal-title">The table feels easy. <em>The work behind it should too.</em></h1>
+          <h1 id="portal-title">The table feels easy. <em className="lux-gradient-text">The work behind it should too.</em></h1>
           <span>
             DINE AI connects the moments your guests see with the coordination your team needs—from a first booking to the final bill.
           </span>
@@ -68,10 +68,10 @@ export default function Home() {
             <div><b>Live</b><span>service updates</span></div>
           </div>
         </div>
-        <div className="portal-hero-media reveal reveal-late">
-          <img src={heroDish.image} alt={heroDish.name} />
-          <div className="hero-media-caption"><span>Tonight at Tandoor Bistro</span><b>{heroDish.name}</b><small>Prepared to order · 19 min</small></div>
-          <div className="hero-status"><i /><span>Kitchen in rhythm</span></div>
+        <div className="portal-hero-media reveal-lux reveal-lux-delay-1">
+          <img src={heroDish.image} alt={heroDish.name} className="lux-animated-img" />
+          <div className="hero-media-caption lux-glass"><span>Tonight at Tandoor Bistro</span><b>{heroDish.name}</b><small>Prepared to order · 19 min</small></div>
+          <div className="hero-status lux-glass"><i /><span>Kitchen in rhythm</span></div>
         </div>
       </section>
 
@@ -80,13 +80,13 @@ export default function Home() {
       </section>
 
       <section id="experience" className="portal-section portal-story">
-        <div className="section-intro reveal">
+        <div className="section-intro reveal-lux">
           <p className="portal-eyebrow">ONE SERVICE, MANY SMALL MOMENTS</p>
           <h2>Give every guest a thoughtful experience—without making the team chase information.</h2>
         </div>
         <div className="moment-grid">
           {moments.map(({ title, text, icon: Icon }, index) => (
-            <article className="moment-card reveal" style={{ animationDelay: `${index * 100}ms` }} key={title}>
+            <article className="moment-card reveal-lux lux-hover" style={{ animationDelay: `${index * 150}ms` }} key={title}>
               <span><Icon size={20} /></span>
               <h3>{title}</h3>
               <p>{text}</p>
@@ -97,12 +97,12 @@ export default function Home() {
       </section>
 
       <section className="portal-section story-split">
-        <div className="story-image-stack reveal">
-          <img className="story-image-large" src={secondDish.image} alt={secondDish.name} />
-          <img className="story-image-small" src={thirdDish.image} alt={thirdDish.name} />
-          <div className="story-chip"><CheckCircle2 size={16} /> Dietary notes carried through</div>
+        <div className="story-image-stack reveal-lux">
+          <img className="story-image-large lux-animated-img" src={secondDish.image} alt={secondDish.name} />
+          <img className="story-image-small lux-animated-img" style={{ animationDelay: '2s' }} src={thirdDish.image} alt={thirdDish.name} />
+          <div className="story-chip lux-glass"><CheckCircle2 size={16} /> Dietary notes carried through</div>
         </div>
-        <div className="story-copy reveal reveal-late">
+        <div className="story-copy reveal-lux reveal-lux-delay-1">
           <p className="portal-eyebrow">BUILT FOR THE ACTUAL SHIFT</p>
           <h2>Every choice stays visible where it matters.</h2>
           <p>When a guest filters the menu, books a seat or selects UPI, card or counter payment, that decision moves naturally into the service flow. There is no second notebook, no handover gap and no guessing at the pass.</p>
@@ -116,13 +116,13 @@ export default function Home() {
       </section>
 
       <section id="operations" className="portal-section operations-section">
-        <div className="section-intro reveal">
+        <div className="section-intro reveal-lux">
           <p className="portal-eyebrow">THE WHOLE RESTAURANT, IN STEP</p>
           <h2>Choose the workspace that needs your attention.</h2>
         </div>
         <div className="route-grid" aria-label="Restaurant workspaces">
           {routes.map(({ destination, label, copy, icon: Icon }, index) => (
-            <Link className="route-card reveal" style={{ animationDelay: `${(index % 4) * 70}ms` }} href={`/auth?next=${encodeURIComponent(destination)}`} key={destination}>
+            <Link className="route-card reveal-lux lux-hover" style={{ animationDelay: `${(index % 4) * 100}ms` }} href={`/auth?next=${encodeURIComponent(destination)}`} key={destination}>
               <Icon size={21} />
               <h3>{label}</h3>
               <p>{copy}</p>
@@ -132,9 +132,9 @@ export default function Home() {
         </div>
       </section>
 
-      <section className="portal-cta reveal">
+      <section className="portal-cta reveal-lux">
         <div><p className="portal-eyebrow">START WITH THE NEXT TABLE</p><h2>Make the next service feel considered.</h2></div>
-        <div className="portal-actions"><Link className="launch" href="/guest">Explore as a guest <ArrowUpRight size={18} /></Link><Link className="portal-signin" href="/auth">Sign in for your team</Link></div>
+        <div className="portal-actions"><Link className="launch lux-hover" href="/guest">Explore as a guest <ArrowUpRight size={18} /></Link><Link className="portal-signin lux-hover" href="/auth">Sign in for your team</Link></div>
       </section>
 
       <footer className="portal-footer"><span>© 2026 DINE AI</span><span>Built for considered service.</span><div><Link href="/legal/privacy">Privacy</Link><Link href="/legal/terms">Terms</Link><Link href="/legal/cookies">Cookies</Link></div></footer>

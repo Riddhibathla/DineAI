@@ -33,6 +33,59 @@ import {
   saveStoredList,
 } from "@/lib/customer-activity";
 
+type RazorpayPaymentResponse = {
+  razorpay_payment_id: string;
+  razorpay_order_id: string;
+  razorpay_signature: string;
+};
+
+type RazorpayInstance = {
+  open: () => void;
+  on: (event: "payment.failed", handler: (response: { error?: { description?: string } }) => void) => void;
+};
+
+type RazorpayConstructor = new (options: {
+  key: string;
+  amount: number;
+  currency: string;
+  name: string;
+  description: string;
+  order_id: string;
+  prefill?: { name?: string };
+  method?: { upi?: boolean; card?: boolean; netbanking?: boolean; wallet?: boolean };
+  handler: (response: RazorpayPaymentResponse) => void | Promise<void>;
+  modal?: { ondismiss?: () => void };
+  theme?: { color?: string };
+}) => RazorpayInstance;
+
+declare global {
+  interface Window {
+    Razorpay?: RazorpayConstructor;
+  }
+}
+
+function loadRazorpayCheckout() {
+  if (window.Razorpay) return Promise.resolve(true);
+
+  return new Promise<boolean>((resolve) => {
+    const existingScript = document.querySelector<HTMLScriptElement>(
+      'script[src="https://checkout.razorpay.com/v1/checkout.js"]',
+    );
+    if (existingScript) {
+      existingScript.addEventListener("load", () => resolve(Boolean(window.Razorpay)), { once: true });
+      existingScript.addEventListener("error", () => resolve(false), { once: true });
+      return;
+    }
+
+    const script = document.createElement("script");
+    script.src = "https://checkout.razorpay.com/v1/checkout.js";
+    script.async = true;
+    script.onload = () => resolve(Boolean(window.Razorpay));
+    script.onerror = () => resolve(false);
+    document.body.appendChild(script);
+  });
+}
+
 type Page =
   | "guest"
   | "queue"
@@ -325,7 +378,7 @@ function Guest({
   const [cardNumber, setCardNumber] = useState("");
   const [cardExpiry, setCardExpiry] = useState("");
   const [cardCvv, setCardCvv] = useState("");
-  const [upiId, setUpiId] = useState("");
+  const [isPaymentStarting, setIsPaymentStarting] = useState(false);
   const [orderId, setOrderId] = useState("");
   const [waitlistModalOpen, setWaitlistModalOpen] = useState(false);
   const [waitlistName, setWaitlistName] = useState("");
@@ -337,59 +390,127 @@ function Guest({
     setModalOpen(true);
   };
 
-  const submitOrder = (event: FormEvent<HTMLFormElement>) => {
+  const submitOrder = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     const submittedCart = cart;
     const submittedTotal = submittedCart.reduce(
       (sum, id) => sum + (menu.find((item) => item.id === id)?.priceCents ?? 0),
       0,
     );
-    onSubmit({
-      id: orderId,
-      customerName: customerName.trim(),
-      table: table
-        ? "T08"
-        : serverMode
-          ? `T${tableNumber.trim().padStart(2, "0")}`
-          : "Counter",
-      notes: notes.trim(),
-      paymentMethod: serverMode ? "NOT_REQUIRED" : paymentMethod,
-      paymentStatus:
+
+    const finalizeOrder = (paymentDetails: string = "") => {
+      onSubmit({
+        id: orderId,
+        customerName: customerName.trim(),
+        table: table
+          ? "T08"
+          : serverMode
+            ? `T${tableNumber.trim().padStart(2, "0")}`
+            : "Counter",
+        notes: notes.trim(),
+        paymentMethod: serverMode ? "NOT_REQUIRED" : paymentMethod,
+        paymentStatus:
+          serverMode
+            ? "NOT_REQUIRED"
+            : paymentMethod === "PAY_AT_COUNTER"
+              ? "PENDING"
+              : "PAID",
+        paymentDetail:
+          serverMode
+            ? "Handled by service team"
+            : paymentMethod === "CARD"
+              ? `Card ending ${cardNumber.replace(/\D/g, "").slice(-4)}`
+              : paymentMethod === "UPI"
+                ? paymentDetails
+                : "Cash at restaurant counter",
+        itemIds: submittedCart,
+        total: submittedTotal,
+        createdAt: new Date().toISOString(),
+        source: serverMode ? "server" : "customer",
+        fulfillmentStatus: "SENT",
+      });
+      setCart([]);
+      setCustomerName("");
+      setTableNumber("");
+      setNotes("");
+      setPaymentMethod("PAY_AT_COUNTER");
+      setCardholderName("");
+      setCardNumber("");
+      setCardExpiry("");
+      setCardCvv("");
+      setModalOpen(false);
+      toast.success(
         serverMode
-          ? "NOT_REQUIRED"
-          : paymentMethod === "PAY_AT_COUNTER"
-            ? "PENDING"
-            : "PAID",
-      paymentDetail:
-        serverMode
-          ? "Handled by service team"
-          : paymentMethod === "CARD"
-            ? `Card ending ${cardNumber.replace(/\D/g, "").slice(-4)}`
-            : paymentMethod === "UPI"
-              ? `UPI · ${upiId.trim()}`
-              : "Cash at restaurant counter",
-      itemIds: submittedCart,
-      total: submittedTotal,
-      createdAt: new Date().toISOString(),
-      source: serverMode ? "server" : "customer",
-      fulfillmentStatus: "SENT",
-    });
-    setCart([]);
-    setCustomerName("");
-    setTableNumber("");
-    setNotes("");
-    setPaymentMethod("PAY_AT_COUNTER");
-    setCardholderName("");
-    setCardNumber("");
-    setCardExpiry("");
-    setCardCvv("");
-    setUpiId("");
-    setModalOpen(false);
-    toast.success(
-      serverMode
-        ? `Order ${orderId} sent to the kitchen`
-        : `Order ${orderId} sent to the kitchen and billing`,
-    );
+          ? `Order ${orderId} sent to the kitchen`
+          : `Order ${orderId} sent to the kitchen and billing`,
+      );
+    };
+
+    if (!serverMode && paymentMethod === "UPI") {
+      const key = process.env.NEXT_PUBLIC_RAZORPAY_KEY_ID;
+      if (!key) {
+        toast.error("UPI test checkout is not configured yet. Add your Razorpay test keys first.");
+        return;
+      }
+
+      setIsPaymentStarting(true);
+      try {
+        const orderResponse = await fetch("/api/payments/razorpay/order", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ amount: submittedTotal, receipt: orderId }),
+        });
+        const order = (await orderResponse.json()) as { id?: string; error?: string };
+        if (!orderResponse.ok || !order.id) {
+          throw new Error(order.error || "Unable to start the UPI checkout.");
+        }
+
+        const loaded = await loadRazorpayCheckout();
+        if (!loaded || !window.Razorpay) {
+          throw new Error("Unable to load Razorpay checkout. Please check your connection and try again.");
+        }
+
+        const checkout = new window.Razorpay({
+          key,
+          amount: submittedTotal,
+          currency: "INR",
+          name: "DINE AI",
+          description: `Order ${orderId}`,
+          order_id: order.id,
+          prefill: { name: customerName.trim() },
+          method: { upi: true, card: false, netbanking: false, wallet: false },
+          handler: async (response) => {
+            try {
+              const verificationResponse = await fetch("/api/payments/razorpay/verify", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(response),
+              });
+              if (!verificationResponse.ok) {
+                throw new Error("We could not verify this payment.");
+              }
+              finalizeOrder(`Razorpay UPI · ${response.razorpay_payment_id}`);
+            } catch (error) {
+              toast.error(error instanceof Error ? error.message : "Payment verification failed.");
+            } finally {
+              setIsPaymentStarting(false);
+            }
+          },
+          modal: { ondismiss: () => setIsPaymentStarting(false) },
+          theme: { color: "#341d42" },
+        });
+        checkout.on("payment.failed", (response) => {
+          setIsPaymentStarting(false);
+          toast.error(response.error?.description || "UPI payment was not completed.");
+        });
+        checkout.open();
+      } catch (error) {
+        setIsPaymentStarting(false);
+        toast.error(error instanceof Error ? error.message : "Unable to start the UPI checkout.");
+      }
+    } else {
+      finalizeOrder();
+    }
   };
 
   const submitWaitlistCustomer = (event: FormEvent<HTMLFormElement>) => {
@@ -805,19 +926,8 @@ function Guest({
               )}
               {!serverMode && paymentMethod === "UPI" && (
                 <div className="payment-details">
-                  <label className="wide">
-                    UPI ID
-                    <input
-                      value={upiId}
-                      onChange={(event) => setUpiId(event.target.value)}
-                      placeholder="yourname@bank"
-                      inputMode="email"
-                      pattern="[^@\s]+@[^@\s]+"
-                      required
-                    />
-                  </label>
                   <small className="payment-security-note">
-                    You will receive a UPI payment request when you confirm.
+                    Secure UPI checkout opens through Razorpay. Test Mode only: no money is charged.
                   </small>
                 </div>
               )}
@@ -828,12 +938,14 @@ function Guest({
                   counter.
                 </p>
               )}
-              <button className="submit-order" type="submit">
+              <button className="submit-order" type="submit" disabled={isPaymentStarting}>
                 {serverMode
                   ? "Send to kitchen"
                   : paymentMethod === "PAY_AT_COUNTER"
                     ? "Place order"
-                    : "Pay & place order"}{" "}
+                    : isPaymentStarting
+                      ? "Opening UPI checkout"
+                      : "Pay & place order"}{" "}
                 <ArrowUpRight size={17} />
               </button>
             </form>
