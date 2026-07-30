@@ -1621,6 +1621,42 @@ a {
   grid-template-columns: 1.25fr 0.75fr;
   gap: 16px;
 }
+.pantry-upload-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 22px;
+  margin-bottom: 18px;
+  padding: 18px 20px;
+  border: 1px solid #ded5df;
+  border-radius: 18px;
+  background: #fffdf9;
+}
+.pantry-upload-bar > div { display: flex; align-items: center; gap: 13px; min-width: 0; }
+.pantry-upload-bar > div > span { width: 40px; height: 40px; display: grid; flex: 0 0 auto; place-items: center; border-radius: 12px; background: #eee5f0; color: var(--plum); }
+.pantry-upload-bar p { margin: 0 0 3px; color: #a15b79; font-size: 10px; font-weight: 900; letter-spacing: .13em; }
+.pantry-upload-bar b, .pantry-upload-bar small { display: block; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.pantry-upload-bar b { color: #37243f; font-size: 13px; }
+.pantry-upload-bar small { max-width: 630px; margin-top: 4px; color: #776d78; font-size: 10px; }
+.upload-pantry { display: inline-flex; flex: 0 0 auto; align-items: center; gap: 7px; padding: 11px 13px; border-radius: 10px; background: var(--plum); color: white; font-size: 11px; font-weight: 900; cursor: pointer; }
+.upload-pantry input { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); }
+.upload-pantry.disabled { opacity: .6; cursor: progress; }
+.pantry-workbook-backdrop { position: fixed; inset: 0; z-index: 100; display: grid; place-items: center; padding: 24px; background: #170e20b8; backdrop-filter: blur(8px); }
+.pantry-workbook-modal { width: min(100%, 1000px); max-height: calc(100vh - 48px); overflow: hidden; border-radius: 24px; background: #fffdf9; box-shadow: 0 30px 80px #120b18a8; }
+.pantry-workbook-modal header { display: flex; align-items: flex-start; justify-content: space-between; gap: 20px; padding: 23px 25px 18px; border-bottom: 1px solid #e9e1ea; }
+.pantry-workbook-modal header p { margin: 0; color: #a15b79; font-size: 10px; font-weight: 900; letter-spacing: .14em; }
+.pantry-workbook-modal h2 { margin: 5px 0 4px; color: #34203e; font-size: 25px; letter-spacing: -.05em; }
+.pantry-workbook-modal header small { color: #746c76; font-size: 11px; }
+.pantry-workbook-modal header button { width: 36px; height: 36px; display: grid; flex: 0 0 auto; place-items: center; border: 0; border-radius: 50%; background: #eee8ef; color: var(--plum); }
+.pantry-sheet-table { max-height: calc(100vh - 220px); overflow: auto; padding: 0 25px 25px; }
+.pantry-sheet-table table { width: 100%; min-width: 640px; border-collapse: collapse; color: #453e48; font-size: 12px; }
+.pantry-sheet-table th, .pantry-sheet-table td { padding: 11px 13px; border-bottom: 1px solid #eee8ef; text-align: left; white-space: nowrap; }
+.pantry-sheet-table th { position: sticky; top: 0; background: #f2ebf3; color: #40264c; font-size: 11px; font-weight: 900; }
+.pantry-sheet-table tr:nth-child(even) td { background: #fdfafc; }
+.pantry-workbook-empty { min-height: 300px; display: grid; place-content: center; justify-items: center; gap: 8px; padding: 30px; color: #776e78; text-align: center; }
+.pantry-workbook-empty svg { color: var(--plum); }
+.pantry-workbook-empty h3 { margin: 7px 0 0; color: #36223e; font-size: 18px; }
+.pantry-workbook-empty p { max-width: 330px; margin: 0; font-size: 12px; line-height: 1.55; }
 .ingredient-axis {
   padding: 15px 25px;
   border-radius: 28px;
@@ -2073,6 +2109,8 @@ a {
   .close-layout {
     grid-template-columns: 1fr;
   }
+  .pantry-upload-bar { align-items: flex-start; flex-direction: column; }
+  .pantry-upload-bar small { max-width: calc(100vw - 72px); }
   .safety-circuit {
     grid-template-columns: 1fr;
   }
