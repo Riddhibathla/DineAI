@@ -3,7 +3,7 @@
 > **The AI-Powered Restaurant Operating System**  
 > _Smarter Operations • Safer Dining • Inclusive Experiences_
 
-🌐 **Live Demo:** https://dineai-uqol.onrender.com
+🌐 **Live Demo:** https://dineai-uqol.onrender.com   and https://dine-ai-virid.vercel.app/
 
 ---
 
