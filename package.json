@@ -1,0 +1,11 @@
+{
+  "name": "dine-platform",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "npm --prefix frontend run dev -- -p 3001 --hostname 127.0.0.1",
+    "build": "npm --prefix frontend install && npm --prefix frontend run build",
+    "start": "npm --prefix frontend run start",
+    "backend": "node backend/app.js"
+  }
+}
