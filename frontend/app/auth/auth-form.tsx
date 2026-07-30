@@ -4,6 +4,7 @@ import { FormEvent, useEffect, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { ArrowRight, CheckCircle2, Eye, EyeOff, Loader2 } from "lucide-react";
 import { createClient, isAuthConfigured } from "@/lib/supabase/client";
+import Link from "next/link";
 
 type Mode = "signin" | "signup";
 
@@ -119,7 +120,7 @@ export function AuthForm() {
       </form>
       {message && <p className={success ? "auth-message success" : "auth-message"}>{success && <CheckCircle2 size={16} />}{message}</p>}
       <p className="auth-terms">
-        By continuing, you agree to Dine AI’s Terms and Privacy Policy.
+        By continuing, you agree to DINE AI’s <Link href="/legal/terms">Terms</Link> and <Link href="/legal/privacy">Privacy Policy</Link>.
       </p>
     </div>
   );

@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Toaster } from "sonner";
 import { Providers } from "./providers";
+import { CookieNotice } from "@/components/cookie-notice";
 import "./globals.css";
 
 export const metadata: Metadata = {
@@ -16,6 +17,7 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
       <body>
         <Providers>
           {children}
+          <CookieNotice />
           <Toaster richColors position="top-right" />
         </Providers>
       </body>
