@@ -14,7 +14,7 @@ import {
 
 export default function Home() {
   const routes = [
-    { destination: "/guest", label: "Guest menu", copy: "Live ordering with dietary context.", icon: ScanLine },
+    { destination: "/server-ordering", label: "Guest menu", copy: "Live ordering with dietary context.", icon: ScanLine },
     { destination: "/queue", label: "Waitlist", copy: "Arrival estimates and seating flow.", icon: UsersRound },
     { destination: "/service", label: "Service floor", copy: "Table status and next actions.", icon: Table2 },
     { destination: "/kitchen", label: "Kitchen line", copy: "Tickets, timing and safety checks.", icon: ChefHat },

@@ -34,7 +34,7 @@ type Page =
   | "analytics"
   | "billing"
   | "table";
-type PaymentStatus = "PAY_AT_COUNTER" | "PAID_CASH";
+type PaymentStatus = "PAY_AT_COUNTER" | "PAID_CASH" | "NOT_REQUIRED";
 type SubmittedOrder = {
   id: string;
   customerName: string;
@@ -52,7 +52,7 @@ type WaitlistCustomer = {
 };
 
 const links: Array<{ href: string; label: string; icon: typeof ScanLine }> = [
-  { href: "/guest", label: "Server ordering", icon: ScanLine },
+  { href: "/server-ordering", label: "Guest menu", icon: ScanLine },
   { href: "/queue", label: "Waitlist", icon: UsersRound },
   { href: "/service", label: "Service floor", icon: Table2 },
   { href: "/kitchen", label: "Kitchen line", icon: ChefHat },
@@ -119,7 +119,14 @@ const meta: Record<Page, { lens: string; title: string; description: string }> =
     },
   };
 
-export function Workspace({ page }: { page: Page }) {
+export function Workspace({
+  page,
+  variant = "customer",
+}: {
+  page: Page;
+  variant?: "customer" | "server";
+}) {
+  const isServerOrdering = page === "guest" && variant === "server";
   const [cart, setCart] = useState<string[]>([]);
   const [constraints, setConstraints] = useState<string[]>(["Gluten"]);
   const [drawer, setDrawer] = useState(false);
@@ -162,6 +169,7 @@ export function Workspace({ page }: { page: Page }) {
         nextOrderNumber={1050 + submittedOrders.length}
         onAddToWaitlist={addWaitlistCustomer}
         waitlistPosition={queue.length + waitlistCustomers.length + 1}
+        serverMode={isServerOrdering}
       />
     ) : page === "queue" ? (
       <Queue addedCustomers={waitlistCustomers} />
@@ -192,22 +200,27 @@ export function Workspace({ page }: { page: Page }) {
             AI
           </b>
         </Link>
-        {page !== "guest" && page !== "table" && (
+        {(page !== "guest" && page !== "table") || isServerOrdering ? (
           <nav className={drawer ? "nav-open" : ""}>
             {links.map(({ href, label, icon: Icon }) => (
               <Link
                 key={href}
                 href={href}
-                className={page === href.slice(1) ? "current" : ""}
+                className={
+                  (isServerOrdering && href === "/server-ordering") ||
+                  page === href.slice(1)
+                    ? "current"
+                    : ""
+                }
               >
                 <Icon size={16} />
                 {label}
               </Link>
             ))}
           </nav>
-        )}
+        ) : null}
         <div className="top-tools">
-          {(page === "guest" || page === "table") ? (
+          {(page === "guest" || page === "table") && !isServerOrdering ? (
             <Link className="account-link" href="/auth" aria-label="Sign in">
               <LogIn size={17} />
             </Link>
@@ -264,6 +277,7 @@ function Guest({
   nextOrderNumber,
   onAddToWaitlist,
   waitlistPosition,
+  serverMode,
 }: {
   cart: string[];
   setCart: (items: string[]) => void;
@@ -274,6 +288,7 @@ function Guest({
   nextOrderNumber: number;
   onAddToWaitlist: (customer: WaitlistCustomer) => void;
   waitlistPosition: number;
+  serverMode: boolean;
 }) {
   const total = useMemo(
     () =>
@@ -301,6 +316,7 @@ function Guest({
   );
   const [modalOpen, setModalOpen] = useState(false);
   const [customerName, setCustomerName] = useState("");
+  const [tableNumber, setTableNumber] = useState("");
   const [notes, setNotes] = useState("");
   const [paymentStatus, setPaymentStatus] =
     useState<PaymentStatus>("PAY_AT_COUNTER");
@@ -325,18 +341,27 @@ function Guest({
     onSubmit({
       id: orderId,
       customerName: customerName.trim(),
-      table: table ? "T08" : "Counter",
+      table: table
+        ? "T08"
+        : serverMode
+          ? `T${tableNumber.trim().padStart(2, "0")}`
+          : "Counter",
       notes: notes.trim(),
-      paymentStatus,
+      paymentStatus: serverMode ? "NOT_REQUIRED" : paymentStatus,
       itemIds: submittedCart,
       total: submittedTotal,
     });
     setCart([]);
     setCustomerName("");
+    setTableNumber("");
     setNotes("");
     setPaymentStatus("PAY_AT_COUNTER");
     setModalOpen(false);
-    toast.success(`Order ${orderId} sent to the kitchen and billing`);
+    toast.success(
+      serverMode
+        ? `Order ${orderId} sent to the kitchen`
+        : `Order ${orderId} sent to the kitchen and billing`,
+    );
   };
 
   const submitWaitlistCustomer = (event: FormEvent<HTMLFormElement>) => {
@@ -471,7 +496,11 @@ function Guest({
               {cart.length} selection{cart.length > 1 ? "s" : ""}
             </span>
             <b>₹{(total / 100).toFixed(2)}</b>
-            <small>Customer and payment details required</small>
+            <small>
+              {serverMode
+                ? "Table and customer details required"
+                : "Customer and payment details required"}
+            </small>
           </div>
           <button onClick={() => setModalOpen(true)}>
             Review order <ArrowUpRight size={17} />
@@ -583,6 +612,21 @@ function Guest({
               </footer>
             </div>
             <form onSubmit={submitOrder}>
+              {serverMode && (
+                <label>
+                  Table number
+                  <input
+                    type="number"
+                    min="1"
+                    max="999"
+                    value={tableNumber}
+                    onChange={(event) => setTableNumber(event.target.value)}
+                    placeholder="For example, 8"
+                    required
+                    autoFocus
+                  />
+                </label>
+              )}
               <label>
                 Customer name
                 <input
@@ -590,7 +634,7 @@ function Guest({
                   onChange={(event) => setCustomerName(event.target.value)}
                   placeholder="Enter customer name"
                   required
-                  autoFocus
+                  autoFocus={!serverMode}
                 />
               </label>
               <label>
@@ -602,33 +646,35 @@ function Guest({
                   rows={3}
                 />
               </label>
-              <fieldset>
-                <legend>Payment</legend>
-                <label
-                  className={
-                    paymentStatus === "PAY_AT_COUNTER" ? "selected" : ""
-                  }
-                >
-                  <input
-                    type="radio"
-                    name="payment"
-                    checked={paymentStatus === "PAY_AT_COUNTER"}
-                    onChange={() => setPaymentStatus("PAY_AT_COUNTER")}
-                  />
-                  Pay at counter
-                </label>
-                <label
-                  className={paymentStatus === "PAID_CASH" ? "selected" : ""}
-                >
-                  <input
-                    type="radio"
-                    name="payment"
-                    checked={paymentStatus === "PAID_CASH"}
-                    onChange={() => setPaymentStatus("PAID_CASH")}
-                  />
-                  Paid cash
-                </label>
-              </fieldset>
+              {!serverMode && (
+                <fieldset>
+                  <legend>Payment</legend>
+                  <label
+                    className={
+                      paymentStatus === "PAY_AT_COUNTER" ? "selected" : ""
+                    }
+                  >
+                    <input
+                      type="radio"
+                      name="payment"
+                      checked={paymentStatus === "PAY_AT_COUNTER"}
+                      onChange={() => setPaymentStatus("PAY_AT_COUNTER")}
+                    />
+                    Pay at counter
+                  </label>
+                  <label
+                    className={paymentStatus === "PAID_CASH" ? "selected" : ""}
+                  >
+                    <input
+                      type="radio"
+                      name="payment"
+                      checked={paymentStatus === "PAID_CASH"}
+                      onChange={() => setPaymentStatus("PAID_CASH")}
+                    />
+                    Paid cash
+                  </label>
+                </fieldset>
+              )}
               <button className="submit-order" type="submit">
                 Send to kitchen <ArrowUpRight size={17} />
               </button>

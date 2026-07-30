@@ -17,8 +17,9 @@ export async function GET(request: Request) {
       const {
         data: { user },
       } = await supabase.auth.getUser();
+      const role = user?.app_metadata.role;
       const destination =
-        user?.app_metadata.role === "manager" ? "/service" : next;
+        role === "manager" || role === "staff" ? "/server-ordering" : next;
       return NextResponse.redirect(new URL(destination, url.origin));
     }
   }

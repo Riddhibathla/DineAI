@@ -8,7 +8,7 @@ import { ArrowLeft, Bell, ChefHat, CreditCard, Leaf, LogIn, Menu, ScanLine, Shie
 type Page = "guest" | "queue" | "service" | "kitchen" | "inventory" | "safety" | "analytics" | "billing" | "table";
 
 const links: Array<{ href: string; label: string; icon: typeof ScanLine }> = [
-  { href: "/guest", label: "Guest menu", icon: ScanLine }, { href: "/queue", label: "Waitlist", icon: UsersRound },
+  { href: "/server-ordering", label: "Guest menu", icon: ScanLine }, { href: "/queue", label: "Waitlist", icon: UsersRound },
   { href: "/service", label: "Service floor", icon: Table2 }, { href: "/kitchen", label: "Kitchen line", icon: ChefHat },
   { href: "/inventory", label: "Pantry", icon: Leaf }, { href: "/safety", label: "SafePlate", icon: ShieldCheck },
   { href: "/analytics", label: "Signals", icon: Sparkles }, { href: "/billing", label: "Billing", icon: CreditCard },

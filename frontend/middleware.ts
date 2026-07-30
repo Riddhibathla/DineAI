@@ -2,6 +2,7 @@ import { createServerClient } from "@supabase/ssr";
 import { NextResponse, type NextRequest } from "next/server";
 
 const managementRoutes = [
+  "/server-ordering",
   "/queue",
   "/service",
   "/kitchen",
@@ -48,7 +49,12 @@ export async function middleware(request: NextRequest) {
     return NextResponse.redirect(loginUrl);
   }
 
-  if (isManagementRoute && user?.app_metadata.role !== "manager") {
+  const restaurantRole = user?.app_metadata.role;
+  if (
+    isManagementRoute &&
+    restaurantRole !== "manager" &&
+    restaurantRole !== "staff"
+  ) {
     return NextResponse.redirect(new URL("/guest", request.url));
   }
 
