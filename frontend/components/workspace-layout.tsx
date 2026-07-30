@@ -2,8 +2,8 @@
 
 import Link from "next/link";
 import { useState } from "react";
-import { toast } from "sonner";
-import { ArrowLeft, Bell, ChefHat, CreditCard, Leaf, LogIn, Menu, ScanLine, ShieldCheck, Sparkles, Table2, UsersRound, X } from "lucide-react";
+import { ArrowLeft, ChefHat, CreditCard, Leaf, LogIn, Menu, ScanLine, ShieldCheck, Sparkles, Table2, UsersRound, X } from "lucide-react";
+import { NotificationPopover } from "@/components/notification-popover";
 
 type Page = "guest" | "queue" | "service" | "kitchen" | "inventory" | "safety" | "analytics" | "billing" | "table";
 
@@ -49,9 +49,7 @@ export function WorkspaceLayout({ page, children }: { page: Page; children: Reac
           <Link className="account-link" href="/account" aria-label="Your account"><LogIn size={17} /></Link>
           {!isGuestView && (
             <>
-              <button onClick={() => toast.info("3 operational updates") } aria-label="Notifications">
-                <Bell size={18} /><i>3</i>
-              </button>
+              <NotificationPopover />
               <button className="nav-toggle" onClick={() => setDrawer(!drawer)} aria-label="Toggle navigation">
                 {drawer ? <X size={19} /> : <Menu size={19} />}
               </button>

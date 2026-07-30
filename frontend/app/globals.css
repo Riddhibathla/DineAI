@@ -591,6 +591,101 @@ a {
   font-size: 9px;
   border-radius: 50%;
 }
+.notification-shell {
+  position: relative;
+}
+.notification-popover {
+  position: absolute;
+  top: calc(100% + 13px);
+  right: 0;
+  z-index: 50;
+  width: min(390px, calc(100vw - 28px));
+  overflow: hidden;
+  border: 1px solid #ddd3df;
+  border-radius: 20px;
+  background: #fffdf9;
+  box-shadow: 0 22px 55px #25152e30;
+}
+.notification-popover header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 14px;
+  padding: 19px 20px 15px;
+  border-bottom: 1px solid #eee7ef;
+}
+.notification-popover header p {
+  margin: 0;
+  color: #aa5177;
+  font-size: 10px;
+  font-weight: 900;
+  letter-spacing: .14em;
+}
+.notification-popover header h2 {
+  margin: 5px 0 0;
+  color: var(--ink);
+  font-size: 18px;
+  letter-spacing: -.04em;
+}
+.notification-popover header button {
+  width: 30px;
+  height: 30px;
+  flex: 0 0 auto;
+  background: #f1ebf2;
+}
+.notification-list {
+  max-height: min(440px, calc(100vh - 180px));
+  overflow-y: auto;
+}
+.notification-list article {
+  position: relative;
+  display: grid;
+  grid-template-columns: 34px 1fr;
+  gap: 11px;
+  padding: 15px 20px;
+  border-bottom: 1px solid #f0eaf0;
+}
+.notification-list article:last-child { border-bottom: 0; }
+.notification-icon {
+  width: 34px;
+  height: 34px;
+  display: grid;
+  place-items: center;
+  border-radius: 11px;
+  background: #eee6f1;
+  color: var(--plum);
+}
+.notification-icon.alert { background: #ffe7e3; color: #c84e40; }
+.notification-icon.payment { background: #dff8eb; color: #19875f; }
+.notification-icon.kitchen { background: #fff0d9; color: #b76c13; }
+.notification-list article > div { display: grid; gap: 3px; padding-right: 10px; }
+.notification-list b { color: #37243f; font-size: 12px; line-height: 1.25; }
+.notification-list small, .notification-list time { color: #766f78; font-size: 10px; line-height: 1.4; }
+.notification-list time { color: #a15b79; font-weight: 700; }
+.notification-list em {
+  position: absolute;
+  top: 20px;
+  right: 13px;
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--coral);
+}
+.notification-popover footer {
+  padding: 12px 20px;
+  border-top: 1px solid #eee7ef;
+}
+.notification-popover footer button {
+  width: 100%;
+  height: auto;
+  padding: 10px;
+  border-radius: 10px;
+  background: #f0e8f3;
+  color: var(--plum);
+  font-size: 11px;
+  font-weight: 900;
+}
+.notification-popover footer button:disabled { opacity: .55; cursor: default; }
 .nav-toggle {
   display: none !important;
 }

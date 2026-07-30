@@ -6,7 +6,6 @@ import { toast } from "sonner";
 import {
   ArrowLeft,
   ArrowUpRight,
-  Bell,
   Check,
   ChefHat,
   CircleAlert,
@@ -23,6 +22,7 @@ import {
   X,
 } from "lucide-react";
 import { inventory, menu, orders, queue, restaurant } from "@/lib/demo-data";
+import { NotificationPopover } from "@/components/notification-popover";
 import {
   BOOKING_STORAGE_KEY,
   ORDER_STORAGE_KEY,
@@ -224,13 +224,7 @@ export function Workspace({
             </Link>
           ) : (
             <>
-              <button
-                onClick={() => toast.info("3 operational updates")}
-                aria-label="Notifications"
-              >
-                <Bell size={18} />
-                <i>3</i>
-              </button>
+              <NotificationPopover />
               <button
                 className="nav-toggle"
                 onClick={() => setDrawer(!drawer)}
