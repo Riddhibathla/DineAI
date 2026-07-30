@@ -13,6 +13,7 @@ export type SubmittedOrder = {
   total: number;
   createdAt: string;
   source: "customer" | "server";
+  fulfillmentStatus: "SENT" | "PREPARING" | "READY";
 };
 
 export type SeatBooking = {
@@ -26,6 +27,7 @@ export type SeatBooking = {
 
 export const ORDER_STORAGE_KEY = "dineai-server-orders";
 export const BOOKING_STORAGE_KEY = "dineai-waitlist";
+export const CUSTOMER_ACTIVITY_EVENT = "dineai-customer-activity";
 
 export function readStoredList<T>(key: string): T[] {
   if (typeof window === "undefined") return [];
@@ -36,4 +38,9 @@ export function readStoredList<T>(key: string): T[] {
   } catch {
     return [];
   }
+}
+
+export function saveStoredList<T>(key: string, value: T[]) {
+  window.localStorage.setItem(key, JSON.stringify(value));
+  window.dispatchEvent(new Event(CUSTOMER_ACTIVITY_EVENT));
 }

@@ -30,6 +30,7 @@ import {
   SeatBooking,
   SubmittedOrder,
   readStoredList,
+  saveStoredList,
 } from "@/lib/customer-activity";
 
 type Page =
@@ -136,15 +137,22 @@ export function Workspace({
   const saveOrder = (order: SubmittedOrder) => {
     const updated = [order, ...submittedOrders];
     setSubmittedOrders(updated);
-    window.localStorage.setItem(
-      ORDER_STORAGE_KEY,
-      JSON.stringify(updated),
+    saveStoredList(ORDER_STORAGE_KEY, updated);
+  };
+  const updateOrderStatus = (
+    id: string,
+    fulfillmentStatus: SubmittedOrder["fulfillmentStatus"],
+  ) => {
+    const updated = submittedOrders.map((order) =>
+      order.id === id ? { ...order, fulfillmentStatus } : order,
     );
+    setSubmittedOrders(updated);
+    saveStoredList(ORDER_STORAGE_KEY, updated);
   };
   const addWaitlistCustomer = (customer: SeatBooking) => {
     const updated = [...waitlistCustomers, customer];
     setWaitlistCustomers(updated);
-    window.localStorage.setItem(BOOKING_STORAGE_KEY, JSON.stringify(updated));
+    saveStoredList(BOOKING_STORAGE_KEY, updated);
   };
   const currentMeta =
     page === "guest" && !isServerOrdering
@@ -174,7 +182,7 @@ export function Workspace({
     ) : page === "service" ? (
       <Service />
     ) : page === "kitchen" ? (
-      <Kitchen submittedOrders={submittedOrders} />
+      <Kitchen submittedOrders={submittedOrders} onUpdateOrder={updateOrderStatus} />
     ) : page === "inventory" ? (
       <Inventory />
     ) : page === "safety" ? (
@@ -219,9 +227,12 @@ export function Workspace({
         ) : null}
         <div className="top-tools">
           {(page === "guest" || page === "table") && !isServerOrdering ? (
-            <Link className="account-link" href="/auth" aria-label="Sign in">
-              <LogIn size={17} />
-            </Link>
+            <>
+              <NotificationPopover customer />
+              <Link className="account-link" href="/auth" aria-label="Sign in">
+                <LogIn size={17} />
+              </Link>
+            </>
           ) : (
             <>
               <NotificationPopover />
@@ -361,6 +372,7 @@ function Guest({
       total: submittedTotal,
       createdAt: new Date().toISOString(),
       source: serverMode ? "server" : "customer",
+      fulfillmentStatus: "SENT",
     });
     setCart([]);
     setCustomerName("");
@@ -944,7 +956,16 @@ function Service() {
   );
 }
 
-function Kitchen({ submittedOrders }: { submittedOrders: SubmittedOrder[] }) {
+function Kitchen({
+  submittedOrders,
+  onUpdateOrder,
+}: {
+  submittedOrders: SubmittedOrder[];
+  onUpdateOrder: (
+    id: string,
+    status: SubmittedOrder["fulfillmentStatus"],
+  ) => void;
+}) {
   return (
     <section className="line-board">
       {submittedOrders.map((order) => (
@@ -974,11 +995,19 @@ function Kitchen({ submittedOrders }: { submittedOrders: SubmittedOrder[] }) {
             )}
           </div>
           <footer>
-            <button onClick={() => toast.success(`${order.id} started`)}>
+            <button
+              onClick={() => {
+                onUpdateOrder(order.id, "PREPARING");
+                toast.success(`${order.id} started`);
+              }}
+            >
               Start
             </button>
             <button
-              onClick={() => toast.success(`${order.id} ready for service`)}
+              onClick={() => {
+                onUpdateOrder(order.id, "READY");
+                toast.success(`${order.id} ready for service`);
+              }}
             >
               Ready
             </button>

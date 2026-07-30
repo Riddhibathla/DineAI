@@ -671,6 +671,19 @@ a {
   border-radius: 50%;
   background: var(--coral);
 }
+.notification-empty {
+  min-height: 180px;
+  display: grid;
+  place-content: center;
+  justify-items: center;
+  gap: 8px;
+  padding: 26px;
+  color: #776e78;
+  text-align: center;
+}
+.notification-empty svg { color: var(--plum); }
+.notification-empty b { color: var(--ink); font-size: 12px; }
+.notification-empty small { max-width: 240px; font-size: 10px; line-height: 1.5; }
 .notification-popover footer {
   padding: 12px 20px;
   border-top: 1px solid #eee7ef;
