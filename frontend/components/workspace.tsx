@@ -128,7 +128,7 @@ export function Workspace({
 }) {
   const isServerOrdering = page === "guest" && variant === "server";
   const [cart, setCart] = useState<string[]>([]);
-  const [constraints, setConstraints] = useState<string[]>(["Gluten"]);
+  const [constraints, setConstraints] = useState<string[]>([]);
   const [drawer, setDrawer] = useState(false);
   const [submittedOrders, setSubmittedOrders] = useState<SubmittedOrder[]>(
     () => {
@@ -302,13 +302,11 @@ function Guest({
   const visibleMenu = useMemo(
     () =>
       menu.filter((dish) => {
-        const allergenFilters = constraints.filter(
-          (constraint) => constraint !== "Vegan",
-        );
+        const allergenFilters = constraints.filter((item) => item !== "Vegan");
         const matchesDiet =
-          !constraints.includes("Vegan") || dish.tags.includes("Vegan");
+          !constraints.includes("Vegan") || dish.dietary.includes("Vegan");
         const avoidsAllergens = !allergenFilters.some((constraint) =>
-          dish.tags.includes(constraint),
+          dish.allergens.includes(constraint),
         );
         return matchesDiet && avoidsAllergens;
       }),
@@ -418,7 +416,7 @@ function Guest({
       </section>
       <section className="preference-strip">
         <div>
-          <p>CUSTOMER NEEDS</p>
+          <p>DIETARY & ALLERGEN FILTERS</p>
           <h3>
             Showing {visibleMenu.length} of {menu.length} dishes that match.
           </h3>
@@ -429,6 +427,16 @@ function Guest({
               key={item}
               className={constraints.includes(item) ? "chosen" : ""}
               aria-pressed={constraints.includes(item)}
+              aria-label={
+                item === "Vegan"
+                  ? "Show vegan dishes only"
+                  : `Exclude dishes containing ${item}`
+              }
+              title={
+                item === "Vegan"
+                  ? "Show vegan dishes only"
+                  : `Exclude ${item}`
+              }
               onClick={() =>
                 setConstraints(
                   constraints.includes(item)
@@ -449,12 +457,8 @@ function Guest({
             <article className={`dish-cell cell-${index + 1}`} key={dish.id}>
               <div
                 className="dish-visual"
-                style={{
-                  backgroundImage: `url(${dish.image})`,
-                  backgroundSize: "cover",
-                  backgroundPosition: "center",
-                }}
               >
+                <img src={dish.image} alt={dish.name} loading="lazy" />
                 <span>{dish.prepMinutes} min</span>
               </div>
               <div className="dish-copy">
