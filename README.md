@@ -4,6 +4,8 @@
 > _Smarter Operations • Safer Dining • Inclusive Experiences_
 
 🌐 **Live Demo:** https://dineai-uqol.onrender.com   and https://dine-ai-virid.vercel.app/
+Manager Login: Riddhibathla95@gmail.com
+Password:Admin@123
 
 ---
 
@@ -33,7 +35,8 @@ DineAI is an AI-powered platform that simplifies restaurant operations through *
 
 ## ✅ User Stories Completed
 
-✔ Authentication & Role-Based Access(BETA) ✔ Digital Ordering & Reservations  
+✔ Authentication & Role-Based Access(BETA)
+✔ Digital Ordering & Reservations  
 ✔ Kitchen & Inventory Management  
 ✔ Billing & Analytics Dashboard  
 ✔ Allergy & Accessibility Support  
