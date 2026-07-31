@@ -33,7 +33,7 @@ DineAI is an AI-powered platform that simplifies restaurant operations through *
 
 ## ✅ User Stories Completed
 
-✔ Authentication & Role-Based Access  
+✔ Authentication & Role-Based Access(BETA) 
 ✔ Digital Ordering & Reservations  
 ✔ Kitchen & Inventory Management  
 ✔ Billing & Analytics Dashboard  
